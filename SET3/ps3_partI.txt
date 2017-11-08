@@ -1,0 +1,172 @@
+Name: Yiling Jiang 
+Email: yiling124@gmail.com
+Problem Set 3 - Part I 
+
+
+
+Problem 1:
+
+
+1, Print the odd values in a linked- list of integers ( Recursive)
+public static void printOddsRecursive(IntNode head) {
+ if (head == null) return;
+ if (head.val % 2 == 1) {
+   System.out.println(head.val);
+ }
+ printOddsRecursive(head.next);
+}
+
+
+
+2, Print the odd values in a linked-list of integers (Iterative)
+public static void printOddsIterative(IntNode head) {
+ if (head == null) return;
+ IntNode cur = head;
+ while(cur != null) {
+   if (cur.val % 2 == 1) {
+     System.out.println(cur.val);
+   }
+   cur = cur.next;
+ }
+}
+
+——————————————————————————————————————————————————
+
+
+Problem 2:
+
+
+1, Worst case scenario, time efficiency 
+In the worst case scenario, list1 has all the same elements. List2 has the one last element equals to the elements in list1
+
+** assume length of list1 = L1; length of list2 = L2
+
+1, In the i-th outer loop: 
+To find the i-th element in the List1, it takes: 
+O(i)
+
+To iterate over the whole list2, and compare each element in List2 with i-th element in list1, it takes:
+ O((L2 + 1)* L2 / 2) 
+
+To add the last element in L2, which is equal to i-th element of List1 into ‘inters’,it  takes:
+O(i)
+ 
+=> so , to find match for i-th element in List1, it  takes in total: 
+O (i) +  O((L2 + 1)* L2 / 2)  + O(i)
+	=> O(i) + O(L2^2)
+
+2, We need to go through the process above for all the elements in List1, i.e for i = 1 until i = L1
+(O(1) + O(L2^2)) + (O(2) + O(L2^2)) +...+ (O(L1) + O(L2^2))
+=> O((1+ L1) * L1/2) + O (L1* L2^2)
+=> O(L1^2) + O(L1* L2^2)
+
+So, in worst case scenario the time complexity is O(L1^2) + O(L1*L2^2)
+
+
+
+
+2, Rewrite this method to improve its time efficiency
+  public static LLList intersect(LLList list1, LLList list2) {
+    LLList inters = new LLList();
+    
+    LLListIterator list1Iter = list1.iterator();
+    
+    while (list1Iter.hasNext()) {
+        Object item1 = list1Iter.next();
+        LLListIterator list2Iter = list2.iterator();
+        while (list2Iter.hasNext()) {
+          Object item2 = list2Iter.next();
+          if (item2.equals(item1)) {
+            inters.addItem(item2, inters.length());
+            break;
+          }
+        }
+    }
+    return inters;
+  }
+
+
+
+
+3, Worst-case running time of the improved algorithm
+1, In the i-th outer loop: 
+To find the i-th element in the List1, it takes: 
+O(1)
+
+To iterate over the whole list2, and compare each element in List2 with i-th element in list1, it takes:
+ O(L2) 
+
+To add the last element in L2, which is equal to i-th element of List1 into ‘inters’,it  takes:
+O(i)
+ 
+=> so , to find match for i-th element in List1, it  takes in total: 
+O (1) +  O(L2)  + O(i)
+	=> O(i) + O(L2)
+
+2, We need to go through the process above for all the elements in List1, i.e for i = 1 until i = L1
+O(1) + O(L2) + O(2) + O(L2) +... + O(L1) + O(L2)
+	=> O((L1 + 1) * L1 / 2) + O(L1 * L2)
+		=> O(L1^2) + O(L1* L2)
+
+So, in worst case scenario the time complexity is O(L1^2) + O(L1* L2)
+
+
+
+——————————————————————————————————————————————————————
+
+Problem 3: Removing a value from a doubly-linked list
+
+
+public static DNode removeAllOccurrences(DNode head, char ch){
+ if (head == null) return head;
+ DNode dummyHead = new DNode();
+ dummyHead.next = head;
+
+ DNode prev = dummyHead;
+ DNode cur = dummyHead.next;
+ while (cur != null && cur.next != null) {
+   if (cur.char == ch) {
+     prev.next = cur.next;
+     cur.next.prev = prev;
+     cur = cur.next;
+   } else {
+     prev = cur;
+     cur = cur.next;
+   }
+ }
+
+ if (cur.char == ch) {
+   prev.next = null;
+ }
+ return dummyHead.next;
+}
+
+
+
+————————————————————————————————————————————————————
+
+Problem 4: Testing for palindromes using a stack
+
+
+public static boolean isPalindrome(String str) {
+ if (str == null) throw new IllegalArgumentException("Input string cannot " +
+   "be null");
+ if (str.length() <= 1) {
+   return true;
+ }
+ ArrayStack<Character> stackHolder = new ArrayStack<>(str.length());
+ int halfSize = (str.length() - 1)/ 2;
+ for (int i = 0; i <= halfSize; i++) {
+   stackHolder.push(str.charAt(i));
+ }
+ if (str.length() % 2 != 0) {
+   stackHolder.pop();
+ }
+ for (int j = halfSize + 1; j <= str.length() - 1; j++) {
+   if (str.charAt(j) != stackHolder.pop()) return false;
+ }
+ return true;
+}
+
+
+
